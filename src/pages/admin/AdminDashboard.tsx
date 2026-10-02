@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Navbar } from '../../components/Navbar';
 import { StatCard } from '../../components/StatCard';
 import { AdminDashboardData } from '../../types';
+import { getApiUrl } from '../../config/api';
 import { FileSpreadsheet, Users, Trophy, TrendingUp, Calendar, Medal } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
@@ -15,7 +16,7 @@ export const AdminDashboard: React.FC = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem('nxtwave_crm_token');
-        const res = await fetch(`/api/admin/dashboard?trendPeriod=${period}`, {
+        const res = await fetch(getApiUrl(`/api/admin/dashboard?trendPeriod=${period}`), {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Navbar } from '../../components/Navbar';
 import { StatCard } from '../../components/StatCard';
 import { ReportData } from '../../types';
+import { getApiUrl } from '../../config/api';
 import { FileSpreadsheet, Users, Calculator, TrendingUp, BarChart, PieChart } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, BarChart as ReBarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
@@ -14,7 +15,7 @@ export const Reports: React.FC = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem('nxtwave_crm_token');
-        const res = await fetch('/api/reports', {
+        const res = await fetch(getApiUrl('/api/reports'), {
           headers: { Authorization: `Bearer ${token}` }
         });
 

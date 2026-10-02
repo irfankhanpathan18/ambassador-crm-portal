@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getApiUrl } from '../config/api';
 import { Lock, Mail, GraduationCap, ArrowRight, ShieldCheck, UserCheck } from 'lucide-react';
 
 export const Login: React.FC = () => {
@@ -18,7 +19,7 @@ export const Login: React.FC = () => {
     setSubmitting(true);
 
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(getApiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })

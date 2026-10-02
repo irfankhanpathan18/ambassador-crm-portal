@@ -3,6 +3,7 @@ import { Navbar } from '../../components/Navbar';
 import { StatCard } from '../../components/StatCard';
 import { Toast } from '../../components/Toast';
 import { AmbassadorDashboardData } from '../../types';
+import { getApiUrl } from '../../config/api';
 import { FileSpreadsheet, Copy, Check, Sparkles, Link2, ExternalLink } from 'lucide-react';
 
 export const AmbassadorDashboard: React.FC = () => {
@@ -16,7 +17,7 @@ export const AmbassadorDashboard: React.FC = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem('nxtwave_crm_token');
-        const res = await fetch('/api/ambassadors/me/dashboard', {
+        const res = await fetch(getApiUrl('/api/ambassadors/me/dashboard'), {
           headers: { Authorization: `Bearer ${token}` }
         });
 

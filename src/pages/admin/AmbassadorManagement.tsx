@@ -3,6 +3,7 @@ import { Navbar } from '../../components/Navbar';
 import { Modal } from '../../components/Modal';
 import { Toast } from '../../components/Toast';
 import { Ambassador } from '../../types';
+import { getApiUrl } from '../../config/api';
 import { UserPlus, Search, Edit3, Power, ExternalLink, Copy, Check, Eye } from 'lucide-react';
 
 export const AmbassadorManagement: React.FC = () => {
@@ -39,7 +40,7 @@ export const AmbassadorManagement: React.FC = () => {
       if (search) params.append('search', search);
       if (statusFilter) params.append('status', statusFilter);
 
-      const res = await fetch(`/api/ambassadors?${params.toString()}`, {
+      const res = await fetch(getApiUrl(`/api/ambassadors?${params.toString()}`), {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -70,7 +71,7 @@ export const AmbassadorManagement: React.FC = () => {
 
     try {
       const token = localStorage.getItem('nxtwave_crm_token');
-      const res = await fetch('/api/ambassadors', {
+      const res = await fetch(getApiUrl('/api/ambassadors'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -116,7 +117,7 @@ export const AmbassadorManagement: React.FC = () => {
 
     try {
       const token = localStorage.getItem('nxtwave_crm_token');
-      const res = await fetch(`/api/ambassadors/${selectedAmbassador.id}`, {
+      const res = await fetch(getApiUrl(`/api/ambassadors/${selectedAmbassador.id}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -146,7 +147,7 @@ export const AmbassadorManagement: React.FC = () => {
     const newStatus = amb.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
     try {
       const token = localStorage.getItem('nxtwave_crm_token');
-      const res = await fetch(`/api/ambassadors/${amb.id}/status`, {
+      const res = await fetch(getApiUrl(`/api/ambassadors/${amb.id}/status`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

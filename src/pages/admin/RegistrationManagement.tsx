@@ -3,6 +3,7 @@ import { Navbar } from '../../components/Navbar';
 import { Pagination } from '../../components/Pagination';
 import { Modal } from '../../components/Modal';
 import { Registration, FilterOptions, Pagination as PaginationType } from '../../types';
+import { getApiUrl } from '../../config/api';
 import { Search, Download, Filter, RefreshCw, Eye, GraduationCap, Calendar, MapPin, BookOpen, Phone, Mail, User, Tag } from 'lucide-react';
 
 export const RegistrationManagement: React.FC = () => {
@@ -45,7 +46,7 @@ export const RegistrationManagement: React.FC = () => {
       if (course) params.append('course', course);
       if (year) params.append('year', year);
 
-      const res = await fetch(`/api/registrations?${params.toString()}`, {
+      const res = await fetch(getApiUrl(`/api/registrations?${params.toString()}`), {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -87,7 +88,7 @@ export const RegistrationManagement: React.FC = () => {
     if (city) params.append('city', city);
 
     // Direct window trigger for download with bearer token auth
-    fetch(`/api/registrations/export?${params.toString()}`, {
+    fetch(getApiUrl(`/api/registrations/export?${params.toString()}`), {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(response => response.blob())

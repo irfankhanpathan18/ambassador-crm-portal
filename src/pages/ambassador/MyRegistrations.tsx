@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Navbar } from '../../components/Navbar';
 import { Pagination } from '../../components/Pagination';
 import { Registration, Pagination as PaginationType } from '../../types';
+import { getApiUrl } from '../../config/api';
 import { Search } from 'lucide-react';
 
 export const MyRegistrations: React.FC = () => {
@@ -20,7 +21,7 @@ export const MyRegistrations: React.FC = () => {
       params.append('limit', '20');
       if (search) params.append('search', search);
 
-      const res = await fetch(`/api/ambassadors/me/registrations?${params.toString()}`, {
+      const res = await fetch(getApiUrl(`/api/ambassadors/me/registrations?${params.toString()}`), {
         headers: { Authorization: `Bearer ${token}` }
       });
 

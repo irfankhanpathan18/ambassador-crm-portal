@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar } from '../../components/Navbar';
 import { LeaderboardItem } from '../../types';
+import { getApiUrl } from '../../config/api';
 import { Trophy, Medal, Award, Flame } from 'lucide-react';
 
 export const Leaderboard: React.FC = () => {
@@ -13,7 +14,7 @@ export const Leaderboard: React.FC = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem('nxtwave_crm_token');
-        const res = await fetch(`/api/leaderboard?period=${period}`, {
+        const res = await fetch(getApiUrl(`/api/leaderboard?period=${period}`), {
           headers: { Authorization: `Bearer ${token}` }
         });
 

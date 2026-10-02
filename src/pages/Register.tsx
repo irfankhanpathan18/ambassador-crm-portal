@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
+import { getApiUrl } from '../config/api';
 import { GraduationCap, CheckCircle2, AlertCircle, ArrowLeft, Sparkles, Building2, User, Mail, Phone, MapPin, BookOpen, Calendar, Tag } from 'lucide-react';
 
 export const Register: React.FC = () => {
@@ -42,7 +43,7 @@ export const Register: React.FC = () => {
     setSubmitting(true);
 
     try {
-      const res = await fetch('/api/registrations', {
+      const res = await fetch(getApiUrl('/api/registrations'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

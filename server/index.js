@@ -8,8 +8,12 @@ const { JWT_SECRET, verifyToken, requireAdmin, requireAmbassador } = require('./
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
 
-app.use(cors());
+app.use(cors({
+  origin: CORS_ORIGIN === '*' ? '*' : CORS_ORIGIN.split(',').map(o => o.trim()),
+  credentials: true
+}));
 app.use(express.json());
 
 // Auto-seed database if empty on startup
@@ -623,10 +627,12 @@ app.get('/api/ambassadors/me/dashboard', verifyToken, requireAmbassador, (req, r
     LIMIT 10
   `).all(ambId);
 
+  const frontendBase = process.env.FRONTEND_URL || `${req.protocol}://${req.get('host').replace(':5000', ':5173')}`;
+
   res.json({
     myRegistrationsCount,
     referralCode: req.user.referralCode,
-    referralLink: `${req.protocol}://${req.get('host').replace(':5000', ':5173')}/register?ref=${req.user.referralCode}`,
+    referralLink: `${frontendBase.replace(/\/$/, '')}/register?ref=${req.user.referralCode}`,
     recentRegistrations
   });
 });
@@ -769,6 +775,17 @@ app.get('/api/reports', verifyToken, requireAdmin, (req, res) => {
       byCollege: registrationsByCollege
     }
   });
+});
+
+// 404 JSON Fallback Handler for undefined API routes
+app.use((req, res) => {
+  res.status(404).json({ error: `API route ${req.method} ${req.url} not found` });
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error('Server internal error:', err);
+  res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
 });
 
 // Start Server
