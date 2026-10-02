@@ -64,7 +64,7 @@ function seedDatabase() {
   for (let i = 0; i < ambassadorRawData.length; i++) {
     const amb = ambassadorRawData[i];
     const ambCreatedAt = new Date(Date.now() - (75 - i * 2) * 24 * 60 * 60 * 1000).toISOString();
-    
+
     // Status is active for all except 2 deactivated for realistic admin testing
     const status = i === 18 || i === 19 ? 'INACTIVE' : 'ACTIVE';
 
@@ -175,7 +175,7 @@ function seedDatabase() {
       const regIdFormatted = `NXT-${String(regCountCounter).padStart(6, '0')}`;
 
       // Distribute creation date across past 60 days with higher density in recent days
-      const daysAgo = Math.pow(Math.random(), 1.5) * 60; 
+      const daysAgo = Math.pow(Math.random(), 1.5) * 60;
       const regCreatedAt = new Date(now - daysAgo * 24 * 60 * 60 * 1000).toISOString();
 
       insertRegistration.run(
