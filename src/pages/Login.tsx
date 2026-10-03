@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getApiUrl } from '../config/api';
 import { Lock, Mail, GraduationCap, ArrowRight, ShieldCheck, UserCheck } from 'lucide-react';
@@ -154,13 +154,13 @@ export const Login: React.FC = () => {
           </div>
 
           <div className="mt-6 text-center">
-            <a
-              href="/register"
+            <Link
+              to="/register"
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
             >
               <GraduationCap className="w-4 h-4" />
-              <span>Go to Public Student Registration Form ↗</span>
-            </a>
+              <span>Go to Public Student Registration Form</span>
+            </Link>
           </div>
         </div>
       </div>

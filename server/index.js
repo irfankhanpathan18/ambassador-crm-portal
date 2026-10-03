@@ -78,44 +78,60 @@ app.get('/api/auth/me', verifyToken, (req, res) => {
 });
 
 // ----------------------------------------------------
-// PUBLIC STUDENT REGISTRATION ENDPOINT
+// PUBLIC STUDENT REGISTRATION ENDPOINTS
 // ----------------------------------------------------
 
-// POST /api/registrations (Public registration)
-app.post('/api/registrations', (req, res) => {
+const handlePublicRegistration = (req, res) => {
   const { name, email, phone, college, city, course, year, referral_code } = req.body;
 
-  // Validation
-  if (!name || !email || !phone || !college || !city || !course || !year || !referral_code) {
-    return res.status(400).json({ error: 'All registration fields are required, including referral code' });
+  // Validation of mandatory fields
+  if (!name || !email || !phone || !college || !city || !course || !year) {
+    return res.status(400).json({ error: 'Please fill in all required registration fields.' });
   }
 
   const trimmedEmail = email.trim().toLowerCase();
   const trimmedPhone = phone.trim();
-  const code = referral_code.trim().toUpperCase();
+  const code = referral_code ? referral_code.trim().toUpperCase() : '';
 
   // 1. Check for Duplicate Registration (Email OR Phone)
   const existingEmail = db.prepare('SELECT id FROM registrations WHERE email = ?').get(trimmedEmail);
   const existingPhone = db.prepare('SELECT id FROM registrations WHERE phone = ?').get(trimmedPhone);
 
   if (existingEmail || existingPhone) {
-    return res.status(400).json({ error: 'This email or phone number is already registered.' });
+    return res.status(400).json({ error: 'An account with this email or phone number is already registered.' });
   }
 
-  // 2. Validate Referral Code
-  const ambassador = db.prepare(`
-    SELECT a.id, a.user_id, u.status 
-    FROM ambassadors a
-    JOIN users u ON a.user_id = u.id
-    WHERE UPPER(a.referral_code) = ?
-  `).get(code);
+  // 2. Validate or Fallback Ambassador Referral Code
+  let ambassador = null;
+  if (code) {
+    ambassador = db.prepare(`
+      SELECT a.id, a.user_id, u.status 
+      FROM ambassadors a
+      JOIN users u ON a.user_id = u.id
+      WHERE UPPER(a.referral_code) = ?
+    `).get(code);
+
+    if (!ambassador) {
+      return res.status(400).json({ error: 'Invalid referral code provided.' });
+    }
+
+    if (ambassador.status === 'INACTIVE') {
+      return res.status(400).json({ error: 'This ambassador referral code is currently inactive.' });
+    }
+  } else {
+    // If no referral code is supplied, assign to default active ambassador
+    ambassador = db.prepare(`
+      SELECT a.id 
+      FROM ambassadors a
+      JOIN users u ON a.user_id = u.id
+      WHERE u.status = 'ACTIVE'
+      ORDER BY a.id ASC
+      LIMIT 1
+    `).get();
+  }
 
   if (!ambassador) {
-    return res.status(400).json({ error: 'Invalid referral code provided.' });
-  }
-
-  if (ambassador.status === 'INACTIVE') {
-    return res.status(400).json({ error: 'This ambassador referral code is currently inactive.' });
+    return res.status(500).json({ error: 'Unable to assign registration to an active ambassador.' });
   }
 
   // 3. Generate Next Registration ID (e.g., NXT-000529)
@@ -149,7 +165,11 @@ app.post('/api/registrations', (req, res) => {
     message: 'Registration successful!',
     registration_id: registrationId
   });
-});
+};
+
+// Handle both POST /api/register and POST /api/registrations
+app.post('/api/register', handlePublicRegistration);
+app.post('/api/registrations', handlePublicRegistration);
 
 // ----------------------------------------------------
 // ADMIN ENDPOINTS

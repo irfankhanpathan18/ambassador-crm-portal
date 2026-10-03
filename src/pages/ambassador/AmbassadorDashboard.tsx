@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Navbar } from '../../components/Navbar';
 import { StatCard } from '../../components/StatCard';
 import { Toast } from '../../components/Toast';
@@ -85,15 +86,13 @@ export const AmbassadorDashboard: React.FC = () => {
               </p>
             </div>
 
-            <a
-              href={data?.referralLink || '#'}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              to={data?.referralCode ? `/register?ref=${data.referralCode}` : '/register'}
               className="mt-4 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-sm"
             >
               <span>Test Registration Page</span>
               <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+            </Link>
           </div>
         </div>
 

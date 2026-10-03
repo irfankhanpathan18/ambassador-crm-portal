@@ -74,6 +74,12 @@ export const App: React.FC = () => {
           {/* Public Unauthenticated Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          
+          {/* Canonical Redirects for Legacy / Alternate Routes */}
+          <Route path="/student-register" element={<Navigate to="/register" replace />} />
+          <Route path="/public-register" element={<Navigate to="/register" replace />} />
+          <Route path="/register-form" element={<Navigate to="/register" replace />} />
+          <Route path="/register/student" element={<Navigate to="/register" replace />} />
 
           {/* Protected Application Routes */}
           <Route path="/*" element={<AuthenticatedLayout />} />

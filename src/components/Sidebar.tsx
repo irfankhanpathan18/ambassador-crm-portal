@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard,
@@ -97,14 +97,13 @@ export const Sidebar: React.FC = () => {
 
       {/* Footer / Logout */}
       <div className="p-4 border-t border-slate-800">
-        <NavLink
+        <Link
           to="/register"
-          target="_blank"
           className="flex items-center gap-2 px-3 py-2 mb-2 rounded-lg text-xs font-semibold text-cyan-400 bg-cyan-950/40 border border-cyan-800/40 hover:bg-cyan-900/50 transition-colors"
         >
           <GraduationCap className="w-4 h-4" />
-          <span>Public Registration Form ↗</span>
-        </NavLink>
+          <span>Public Registration Form</span>
+        </Link>
 
         <button
           onClick={handleLogout}
